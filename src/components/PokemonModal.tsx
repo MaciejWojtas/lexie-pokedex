@@ -1,14 +1,16 @@
-import { Box, Chip, DialogTitle, IconButton, Paper, Stack, Tab, Tabs } from "@mui/material"
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import FavouriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
-import FavouriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
-import { PokemonType } from "./Contexts/PokemonProvider";
-import { useState } from "react";
-import PokemonAbout from "./PokemonAbout";
-import PokemonStats from "./PokemonStats";
-import PokemonEvolution from "./PokemonEvolution";
-import PokemonMoves from "./PokemonMoves";
-import { IChainLink } from "pokeapi-typescript";
+import { useState } from 'react'
+
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded'
+import FavouriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded'
+import FavouriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
+import { Box, Chip, DialogTitle, IconButton, Paper, Stack, Tab, Tabs } from '@mui/material'
+import { IChainLink } from 'pokeapi-typescript'
+
+import { PokemonType } from './Contexts/PokemonProvider'
+import PokemonAbout from './PokemonAbout'
+import PokemonEvolution from './PokemonEvolution'
+import PokemonMoves from './PokemonMoves'
+import PokemonStats from './PokemonStats'
 
 interface PokemonModalProps {
   name: string
@@ -53,7 +55,7 @@ const PokemonModal: React.FC<PokemonModalProps> = ({
   evolutions,
   isFavourite,
   onToggleFavourite,
-  onClose
+  onClose,
 }) => {
   const [currentTab, setCurrentTab] = useState('about')
 
@@ -69,18 +71,15 @@ const PokemonModal: React.FC<PokemonModalProps> = ({
             display: 'flex',
             justifyContent: 'space-between',
             px: 2,
-            pt: 4
+            pt: 4,
           }}
         >
-          <IconButton onClick={onClose} color="inherit">
+          <IconButton color="inherit" onClick={onClose}>
             <ArrowBackRoundedIcon />
           </IconButton>
 
-          <IconButton onClick={onToggleFavourite} color="inherit">
-            {isFavourite
-              ? <FavouriteRoundedIcon />
-              : <FavouriteBorderRoundedIcon />
-            }
+          <IconButton color="inherit" onClick={onToggleFavourite}>
+            {isFavourite ? <FavouriteRoundedIcon /> : <FavouriteBorderRoundedIcon />}
           </IconButton>
         </Box>
 
@@ -98,7 +97,7 @@ const PokemonModal: React.FC<PokemonModalProps> = ({
             direction="row"
             spacing={1}
             sx={{
-              px: 3
+              px: 3,
             }}
           >
             {types.map((type) => (
@@ -108,11 +107,9 @@ const PokemonModal: React.FC<PokemonModalProps> = ({
 
           <Box height={IMAGE_HEIGHT - 100} />
         </Box>
-
       </Paper>
 
       <Paper
-        variant="white"
         sx={{
           flex: 1,
           borderRadius: '30px',
@@ -123,6 +120,7 @@ const PokemonModal: React.FC<PokemonModalProps> = ({
           px: 4,
           paddingTop: '75px',
         }}
+        variant="white"
       >
         <Box
           component="img"
@@ -132,44 +130,39 @@ const PokemonModal: React.FC<PokemonModalProps> = ({
             left: '50%',
             height: IMAGE_HEIGHT,
             marginTop: `${-IMAGE_HEIGHT}px`,
-            transform: 'translateX(-50%)'
+            transform: 'translateX(-50%)',
           }}
         />
 
-        <Tabs
-          value={currentTab}
-          onChange={handleTabChange}
-          variant="fullWidth"
-        >
-          <Tab value="about" label="About" />
-          <Tab value="base-stats" label="Base Stats" />
-          <Tab value="evolution" label="Evolution" />
-          <Tab value="moves" label="Moves" />
+        <Tabs onChange={handleTabChange} value={currentTab} variant="fullWidth">
+          <Tab label="About" value="about" />
+          <Tab label="Base Stats" value="base-stats" />
+          <Tab label="Evolution" value="evolution" />
+          <Tab label="Moves" value="moves" />
         </Tabs>
 
         <Box py={2}>
-          {currentTab === 'about' && <PokemonAbout
-            experience={experience}
-            height={height}
-            weight={weight}
-            abilities={abilities}
-            description={description}
-          />}
-          {currentTab === 'base-stats' && <PokemonStats
-            hp={hp}
-            attack={attack}
-            defense={defense}
-            specialAttack={specialAttack}
-            specialDefense={specialDefense}
-            speed={speed}
-          />}
-          {currentTab === 'evolution' && <PokemonEvolution
-            name={name}
-            evolutions={evolutions}
-          />}
-          {currentTab === 'moves' && <PokemonMoves
-            moves={moves}
-          />}
+          {currentTab === 'about' && (
+            <PokemonAbout
+              abilities={abilities}
+              description={description}
+              experience={experience}
+              height={height}
+              weight={weight}
+            />
+          )}
+          {currentTab === 'base-stats' && (
+            <PokemonStats
+              attack={attack}
+              defense={defense}
+              hp={hp}
+              specialAttack={specialAttack}
+              specialDefense={specialDefense}
+              speed={speed}
+            />
+          )}
+          {currentTab === 'evolution' && <PokemonEvolution evolutions={evolutions} name={name} />}
+          {currentTab === 'moves' && <PokemonMoves moves={moves} />}
         </Box>
       </Paper>
     </Box>

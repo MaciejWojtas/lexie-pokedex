@@ -1,8 +1,19 @@
 import React, { ChangeEvent } from 'react'
-import { Container, Grid, InputAdornment, TextField, Typography, Box, Button, IconButton } from '@mui/material'
-import PokemonCard from '../components/PokemonCard'
+
+import { Close, Favorite, FavoriteBorder, Search } from '@mui/icons-material'
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material'
+
 import { Field, usePokemonContext } from '../components/Contexts/PokemonProvider'
-import { Search, FavoriteBorder, Favorite, Close } from '@mui/icons-material'
+import PokemonCard from '../components/PokemonCard'
 
 const Home: React.FC = () => {
   const {
@@ -31,40 +42,48 @@ const Home: React.FC = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 2 }}>
-      <Typography variant="h1">What Pokemon <br/>are you looking for?</Typography>
+      <Typography variant="h1">
+        What Pokemon <br />
+        are you looking for?
+      </Typography>
       <Box
         sx={{
           display: 'flex',
           pt: 4,
-          pb: 2
+          pb: 2,
         }}
       >
         <TextField
           id="pokemon-search"
-          placeholder="Search Pokemon"
-          variant="outlined"
-          value={query}
-          onChange={handleQueryChange}
           InputProps={{
             sx: { pr: 0 },
-            startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
-            endAdornment: <InputAdornment position="end">
-              <IconButton onClick={() => search('')}><Close /></IconButton>
-            </InputAdornment>
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => search('')}>
+                  <Close />
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
+          onChange={handleQueryChange}
+          placeholder="Search Pokemon"
+          value={query}
+          variant="outlined"
         />
 
         <Button
-          startIcon={filters[Field.favourite]
-            ? <Favorite />
-            : <FavoriteBorder />
-          }
           color={filters[Field.favourite] ? 'primary' : 'secondary'}
+          onClick={handleToggleFavourites}
+          startIcon={filters[Field.favourite] ? <Favorite /> : <FavoriteBorder />}
           sx={{
             flexShrink: 0,
-            ml: '2rem'
+            ml: '2rem',
           }}
-          onClick={handleToggleFavourites}
         >
           My Favourites ({favourites.length})
         </Button>
@@ -72,18 +91,12 @@ const Home: React.FC = () => {
 
       <Grid container spacing={2}>
         {pokemon.map((pokemon) => (
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            key={pokemon.name}
-          >
+          <Grid item key={pokemon.name} md={4} sm={6} xs={12}>
             <PokemonCard
-              pokemon={pokemon}
               isFavourite={favourites.includes(pokemon.name)}
               onAddFavourite={() => addFavourite(pokemon)}
               onRemoveFavourite={() => removeFavourite(pokemon)}
+              pokemon={pokemon}
             />
           </Grid>
         ))}
