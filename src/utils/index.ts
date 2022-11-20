@@ -1,5 +1,5 @@
 export function getIdFromUrl(url: string): number {
-  const urlParts = url.split("/")
+  const urlParts = url.split('/')
   return parseInt(urlParts[urlParts.length - 2])
 }
 

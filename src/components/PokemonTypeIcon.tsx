@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+
 import { SvgIcon, SvgIconProps } from '@mui/material'
-import { PokemonType } from './Contexts/PokemonProvider'
+
 import { ReactComponent as BugIcon } from '../assets/icons/bug.svg'
 import { ReactComponent as DarkIcon } from '../assets/icons/dark.svg'
 import { ReactComponent as DragonIcon } from '../assets/icons/dragon.svg'
@@ -19,15 +20,13 @@ import { ReactComponent as PsychicIcon } from '../assets/icons/psychic.svg'
 import { ReactComponent as RockIcon } from '../assets/icons/rock.svg'
 import { ReactComponent as SteelIcon } from '../assets/icons/steel.svg'
 import { ReactComponent as WaterIcon } from '../assets/icons/water.svg'
+import { PokemonType } from './Contexts/PokemonProvider'
 
 interface PokemonTypeIconProps extends SvgIconProps {
   type: PokemonType
 }
 
-const PokemonTypeIcon: React.FC<PokemonTypeIconProps> = ({
-  type,
-  ...props
-}) => {
+const PokemonTypeIcon: React.FC<PokemonTypeIconProps> = ({ type, ...props }) => {
   const [icon, setIcon] = useState<React.FC>(getIcon())
 
   function getIcon() {
@@ -72,9 +71,7 @@ const PokemonTypeIcon: React.FC<PokemonTypeIconProps> = ({
     }
   }
 
-  return (
-    <SvgIcon component={icon} inheritViewBox {...props} />
-  )
+  return <SvgIcon component={icon} inheritViewBox {...props} />
 }
 
 export default PokemonTypeIcon

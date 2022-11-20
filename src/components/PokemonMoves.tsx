@@ -1,5 +1,6 @@
-import { Divider, Stack, Box, Typography } from "@mui/material"
-import { useState } from "react"
+import { useState } from 'react'
+
+import { Box, Divider, Stack, Typography } from '@mui/material'
 
 interface PokemonMove {
   name: string
@@ -10,13 +11,11 @@ interface PokemonMovesProps {
   moves: PokemonMove[]
 }
 
-const PokemonMoves: React.FC<PokemonMovesProps> = ({
-  moves
-}) => {
+const PokemonMoves: React.FC<PokemonMovesProps> = ({ moves }) => {
   const [levels, setLevels] = useState(organizeByLevel())
 
   function organizeByLevel() {
-    return moves.reduce((accum: { [key: string]: string[]}, move) => {
+    return moves.reduce((accum: { [key: string]: string[] }, move) => {
       const level = move.level.toString()
       if (accum[level]) {
         accum[level].push(move.name)
@@ -29,12 +28,9 @@ const PokemonMoves: React.FC<PokemonMovesProps> = ({
   }
 
   return (
-    <Stack
-      direction="column"
-      divider={<Divider /> }
-    >
+    <Stack direction="column" divider={<Divider />}>
       {Object.keys(levels).map((level) => (
-        <Box py={2} key={level}>
+        <Box key={level} py={2}>
           <Typography>Level {level}</Typography>
           <Typography variant="caption">{levels[level].join(', ')}</Typography>
         </Box>

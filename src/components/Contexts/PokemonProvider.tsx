@@ -28,33 +28,33 @@ interface PokemonProviderProps {
 }
 
 export enum PokemonType {
-  bug = "bug",
-  dark = "dark",
-  dragon = "dragon",
-  electric = "electric",
-  fairy = "fairy",
-  fighting = "fighting",
-  fire = "fire",
-  flying = "flying",
-  ghost = "ghost",
-  grass = "grass",
-  ground = "ground",
-  ice = "ice",
-  normal = "normal",
-  poison = "poison",
-  psychic = "psychic",
-  rock = "rock",
-  steel = "steel",
-  water = "water",
+  bug = 'bug',
+  dark = 'dark',
+  dragon = 'dragon',
+  electric = 'electric',
+  fairy = 'fairy',
+  fighting = 'fighting',
+  fire = 'fire',
+  flying = 'flying',
+  ghost = 'ghost',
+  grass = 'grass',
+  ground = 'ground',
+  ice = 'ice',
+  normal = 'normal',
+  poison = 'poison',
+  psychic = 'psychic',
+  rock = 'rock',
+  steel = 'steel',
+  water = 'water',
 }
 
 export enum PokemonStat {
-  hp = "hp",
-  attack = "attack",
-  defense = "defense",
-  specialAttack = "special-attack",
-  specialDefense = "special-defense",
-  speed = "speed"
+  hp = 'hp',
+  attack = 'attack',
+  defense = 'defense',
+  specialAttack = 'special-attack',
+  specialDefense = 'special-defense',
+  speed = 'speed',
 }
 
 const PokemonProvider: React.FC<PokemonProviderProps> = ({ children }) => {
@@ -136,12 +136,12 @@ const PokemonProvider: React.FC<PokemonProviderProps> = ({ children }) => {
   }
 
   function addFilter(field: Field, value: FilterValue) {
-    const newFilters = {...filters, [field]: value}
+    const newFilters = { ...filters, [field]: value }
     setFilters(newFilters)
   }
 
   function removeFilter(field: Field) {
-    const newFilters = {...filters}
+    const newFilters = { ...filters }
     newFilters[field] = undefined
     setFilters(newFilters)
   }
@@ -155,30 +155,32 @@ const PokemonProvider: React.FC<PokemonProviderProps> = ({ children }) => {
   }
 
   return (
-    <PokemonContext.Provider value={{
-      pokemon,
-      query,
-      search,
-      favourites,
-      addFavourite,
-      removeFavourite,
-      filters,
-      addFilter,
-      removeFilter
-    }}>
+    <PokemonContext.Provider
+      value={{
+        pokemon,
+        query,
+        search,
+        favourites,
+        addFavourite,
+        removeFavourite,
+        filters,
+        addFilter,
+        removeFilter,
+      }}
+    >
       {children}
     </PokemonContext.Provider>
   )
 }
 
 export const usePokemonContext = () => {
-  const pokemon = useContext(PokemonContext);
+  const pokemon = useContext(PokemonContext)
 
   if (!pokemon) {
-    throw Error('Cannot use `usePokemonContext` outside of `PokemonProvider`');
+    throw Error('Cannot use `usePokemonContext` outside of `PokemonProvider`')
   }
 
-  return pokemon;
+  return pokemon
 }
 
-export default PokemonProvider;
+export default PokemonProvider
