@@ -16,7 +16,7 @@ import PokeAPI, { IChainLink, INamedApiResource, IPokemon } from 'pokeapi-typesc
 import PokemonModal from 'src/features/pokemons/components/PokemonModal'
 import { PokemonStat, PokemonType } from 'src/features/pokemons/contexts/PokemonProvider'
 import { baseTheme, getTheme } from 'src/theme'
-import { getIdFromUrl, isOG } from 'src/utils'
+import { getIdFromUrl } from 'src/utils'
 
 import populateEvolution from '../utils/populateEvolution'
 
@@ -163,27 +163,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
       .then((evolutions) => {
         const chain: IChainLink[] = []
         const link: IChainLink | undefined = evolutions.chain
-        console.log({ link })
-        function recurse(link: IChainLink) {
-          // only respect the OG pokemon
-          if (!link.evolves_to.length) {
-            return
-          }
-          // eslint-disable-next-line
-          link.evolves_to = link.evolves_to.filter((link) => isOG(link.species.url))
-
-          // in some cases, non-OG pokemon evolve into OG pokemon (like Pichu)
-          // don't include non-OG pokemon in our chain, but still process
-          // their evolutions
-          if (isOG(link.species.url)) {
-            chain.push(link)
-          }
-          // eslint-disable-next-line
-          for (const child of link.evolves_to) {
-            recurse(child)
-          }
-        }
-        recurse(link)
+        populateEvolution(link, chain)
 
         setEvolutions(chain)
       })
