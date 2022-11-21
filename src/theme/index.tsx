@@ -1,6 +1,5 @@
 import { createTheme } from '@mui/material'
-
-import { PokemonType } from '../components/Contexts/PokemonProvider'
+import { PokemonType } from 'src/features/pokemons/contexts/PokemonProvider'
 
 declare module '@mui/material/Paper' {
   interface PaperPropsVariantOverrides {
@@ -26,6 +25,10 @@ const brownDark = '#bc8939'
 const greyLight = '#dde4e4'
 const greyDark = '#bcc4c4'
 
+function createGradient(light: string, dark: string) {
+  return `linear-gradient(to right bottom, ${light}, ${dark} 120%)`
+}
+
 const greenGradient = createGradient(greenLight, greenDark)
 const yellowGradient = createGradient(yellowLight, yellowDark)
 const redGradient = createGradient(redLight, redDark)
@@ -34,10 +37,6 @@ const purpleGradient = createGradient(purpleLight, purpleDark)
 const pinkGradient = createGradient(pinkLight, pinkDark)
 const brownGradient = createGradient(brownLight, brownDark)
 const greyGradient = createGradient(greyLight, greyDark)
-
-function createGradient(light: string, dark: string) {
-  return `linear-gradient(to right bottom, ${light}, ${dark} 120%)`
-}
 
 export const baseTheme = createTheme({
   palette: {
@@ -355,6 +354,7 @@ export function getTheme(type: PokemonType) {
 
     case PokemonType.ground:
     case PokemonType.rock:
+    default:
       return brownTheme
   }
 }

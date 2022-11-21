@@ -11,9 +11,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-
-import { Field, usePokemonContext } from '../components/Contexts/PokemonProvider'
-import PokemonCard from '../components/PokemonCard'
+import PokemonCard from 'src/features/pokemons/components/PokemonCard'
+import { Field, usePokemonContext } from 'src/features/pokemons/contexts/PokemonProvider'
 
 const Home: React.FC = () => {
   const {

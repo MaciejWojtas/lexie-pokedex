@@ -1,8 +1,7 @@
-import React from 'react'
 import { ThemeProvider } from '@mui/material'
-import PokemonProvider from './components/Contexts/PokemonProvider'
-import Home from './pages/Home'
-import { baseTheme } from './theme'
+import PokemonProvider from 'src/features/pokemons/contexts/PokemonProvider'
+import Home from 'src/pages/Home'
+import { baseTheme } from 'src/theme'
 
 function App() {
   return (

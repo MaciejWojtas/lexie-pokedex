@@ -13,11 +13,12 @@ import {
   ThemeProvider,
 } from '@mui/material'
 import PokeAPI, { IChainLink, INamedApiResource, IPokemon } from 'pokeapi-typescript'
+import PokemonModal from 'src/features/pokemons/components/PokemonModal'
+import { PokemonStat, PokemonType } from 'src/features/pokemons/contexts/PokemonProvider'
+import { baseTheme, getTheme } from 'src/theme'
+import { getIdFromUrl, isOG } from 'src/utils'
 
-import { baseTheme, getTheme } from '../theme'
-import { getIdFromUrl, isOG } from '../utils'
-import { PokemonStat, PokemonType } from './Contexts/PokemonProvider'
-import PokemonModal from './PokemonModal'
+import populateEvolution from '../utils/populateEvolution'
 
 interface PokemonCardProps {
   pokemon: INamedApiResource<IPokemon>
@@ -68,7 +69,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
     const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting))
 
     observer.observe(ref.current)
-  }, [ref.current])
+  }, [ref])
 
   useEffect(() => {
     // only fetch data for pokemon in view
@@ -89,7 +90,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
         setWeight(pokemon.weight)
         setAbilities(abilities)
 
-        for (const stat of pokemon.stats) {
+        pokemon.stats.forEach((stat) => {
           switch (stat.stat.name) {
             case PokemonStat.hp:
               setHp(stat.base_stat)
@@ -114,8 +115,10 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
             case PokemonStat.speed:
               setSpeed(stat.base_stat)
               break
+            default:
+              break
           }
-        }
+        })
 
         const moves = pokemon.moves
           .filter((resource) =>
@@ -160,14 +163,13 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
       .then((evolutions) => {
         const chain: IChainLink[] = []
         const link: IChainLink | undefined = evolutions.chain
-        recurse(link)
-
+        console.log({ link })
         function recurse(link: IChainLink) {
           // only respect the OG pokemon
           if (!link.evolves_to.length) {
             return
           }
-
+          // eslint-disable-next-line
           link.evolves_to = link.evolves_to.filter((link) => isOG(link.species.url))
 
           // in some cases, non-OG pokemon evolve into OG pokemon (like Pichu)
@@ -176,15 +178,17 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
           if (isOG(link.species.url)) {
             chain.push(link)
           }
-
+          // eslint-disable-next-line
           for (const child of link.evolves_to) {
             recurse(child)
           }
         }
+        recurse(link)
 
         setEvolutions(chain)
       })
       .finally(() => setLoading(false))
+    // eslint-disable-next-line  react-hooks/exhaustive-deps
   }, [isVisible, pokemon.url])
 
   function handleToggleFavourite() {

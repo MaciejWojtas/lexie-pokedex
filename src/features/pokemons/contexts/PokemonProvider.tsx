@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
+
 import PokeAPI, { INamedApiResource, IPokemon } from 'pokeapi-typescript'
-import { getIdFromUrl, isOG } from '../../utils'
+import { getIdFromUrl } from 'src/utils'
 
 export enum Field {
   favourite = 'favourite',
@@ -64,15 +65,18 @@ const PokemonProvider: React.FC<PokemonProviderProps> = ({ children }) => {
   const [query, setQuery] = useState<string>('')
   const [filters, setFilters] = useState<Filters>({} as Filters)
   const [error, setError] = useState<any>()
-
+  const fetchPokemon = async () => {
+    try {
+      const response = await PokeAPI.Pokemon.list(150, 0)
+      setData(response.results)
+      setPokemon(response.results)
+    } catch (error) {
+      setError(error)
+    }
+  }
   useEffect(() => {
     fetchPokemon()
   }, [])
-
-  useEffect(() => {
-    filterData()
-  }, [filters, query, data])
-
   const filterData = async () => {
     if (!data) {
       return
@@ -81,7 +85,9 @@ const PokemonProvider: React.FC<PokemonProviderProps> = ({ children }) => {
     let filteredData = [...data]
     const fields = Object.keys(filters) as Field[]
 
+    // eslint-disable-next-line no-restricted-syntax
     for (const field of fields) {
+      // eslint-disable-next-line default-case
       switch (field) {
         case Field.favourite: {
           const value = filters[field]
@@ -103,25 +109,16 @@ const PokemonProvider: React.FC<PokemonProviderProps> = ({ children }) => {
       const aId = getIdFromUrl(a.url)
       const bId = getIdFromUrl(b.url)
 
-      if (aId > bId) {
-        return 1
-      } else {
-        return -1
-      }
+      return aId > bId ? 1 : -1
     })
 
     setPokemon(filteredData)
   }
 
-  const fetchPokemon = async () => {
-    try {
-      const response = await PokeAPI.Pokemon.list(150, 0)
-      setData(response.results)
-      setPokemon(response.results)
-    } catch (error) {
-      setError(error)
-    }
-  }
+  useEffect(() => {
+    filterData()
+    // eslint-disable-next-line  react-hooks/exhaustive-deps
+  }, [filters, query, data])
 
   const search = (query: string) => {
     setQuery(query)
@@ -151,7 +148,7 @@ const PokemonProvider: React.FC<PokemonProviderProps> = ({ children }) => {
   }
 
   if (!pokemon) {
-    return <div></div>
+    return <div />
   }
 
   return (
