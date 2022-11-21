@@ -12,7 +12,7 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2018,
+    "ecmaVersion": "latest",
     "project": "./tsconfig.json",
     "sourceType": "module"
   },
@@ -80,6 +80,9 @@
     ],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-shadow": "off",
+    "react/jsx-no-bind": "off",
+    "import/extensions": "off",
     "sort-imports": [
       "error",
       {

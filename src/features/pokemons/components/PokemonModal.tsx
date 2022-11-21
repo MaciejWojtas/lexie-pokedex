@@ -5,12 +5,12 @@ import FavouriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounde
 import FavouriteRoundedIcon from '@mui/icons-material/FavoriteRounded'
 import { Box, Chip, DialogTitle, IconButton, Paper, Stack, Tab, Tabs } from '@mui/material'
 import { IChainLink } from 'pokeapi-typescript'
-
-import { PokemonType } from './Contexts/PokemonProvider'
-import PokemonAbout from './PokemonAbout'
-import PokemonEvolution from './PokemonEvolution'
-import PokemonMoves from './PokemonMoves'
-import PokemonStats from './PokemonStats'
+import PokemonAbout from 'src/features/pokemons/components/PokemonAbout'
+import PokemonEvolution from 'src/features/pokemons/components/PokemonEvolution'
+import PokemonMoves from 'src/features/pokemons/components/PokemonMoves'
+import PokemonStats from 'src/features/pokemons/components/PokemonStats'
+import { PokemonType } from 'src/features/pokemons/contexts/PokemonProvider'
+import organizeByLevel from 'src/features/pokemons/utils/moves'
 
 interface PokemonModalProps {
   name: string
@@ -62,6 +62,8 @@ const PokemonModal: React.FC<PokemonModalProps> = ({
   function handleTabChange(event: React.SyntheticEvent, newValue: string) {
     setCurrentTab(newValue)
   }
+
+  const movesOrganizedByLevel = organizeByLevel(moves)
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '90vh' }}>
@@ -162,7 +164,7 @@ const PokemonModal: React.FC<PokemonModalProps> = ({
             />
           )}
           {currentTab === 'evolution' && <PokemonEvolution evolutions={evolutions} name={name} />}
-          {currentTab === 'moves' && <PokemonMoves moves={moves} />}
+          {currentTab === 'moves' && <PokemonMoves levels={movesOrganizedByLevel} />}
         </Box>
       </Paper>
     </Box>

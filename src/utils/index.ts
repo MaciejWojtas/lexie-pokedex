@@ -1,6 +1,6 @@
 export function getIdFromUrl(url: string): number {
   const urlParts = url.split('/')
-  return parseInt(urlParts[urlParts.length - 2])
+  return parseInt(urlParts[urlParts.length - 2], 10)
 }
 
 export function isOG(url: string) {
