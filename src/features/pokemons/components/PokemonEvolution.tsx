@@ -1,7 +1,6 @@
 import { Divider, Stack, Typography } from '@mui/material'
 import { IChainLink } from 'pokeapi-typescript'
-
-import EvolutionChain from './EvlolutionChain'
+import EvolutionChain from 'src/features/pokemons/components/EvlolutionChain'
 
 interface PokemonEvolutionProps {
   name: string

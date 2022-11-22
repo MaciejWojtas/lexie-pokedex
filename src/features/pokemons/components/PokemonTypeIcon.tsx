@@ -19,7 +19,8 @@ import { ReactComponent as PsychicIcon } from 'src/assets/icons/psychic.svg'
 import { ReactComponent as RockIcon } from 'src/assets/icons/rock.svg'
 import { ReactComponent as SteelIcon } from 'src/assets/icons/steel.svg'
 import { ReactComponent as WaterIcon } from 'src/assets/icons/water.svg'
-import { PokemonType } from 'src/features/pokemons/contexts/PokemonProvider'
+
+import { PokemonType } from 'src/features/pokemons/types/pokemon'
 
 interface PokemonTypeIconProps extends SvgIconProps {
   type: PokemonType
@@ -27,41 +28,41 @@ interface PokemonTypeIconProps extends SvgIconProps {
 
 function getIcon(type: PokemonType) {
   switch (type) {
-    case PokemonType.bug:
+    case 'bug':
       return BugIcon
-    case PokemonType.dark:
+    case 'dark':
       return DarkIcon
-    case PokemonType.dragon:
+    case 'dragon':
       return DragonIcon
-    case PokemonType.electric:
+    case 'electric':
       return ElectricIcon
-    case PokemonType.fairy:
+    case 'fairy':
       return FairyIcon
-    case PokemonType.fighting:
+    case 'fighting':
       return FightingIcon
-    case PokemonType.fire:
+    case 'fire':
       return FireIcon
-    case PokemonType.flying:
+    case 'flying':
       return FlyingIcon
-    case PokemonType.ghost:
+    case 'ghost':
       return GhostIcon
-    case PokemonType.grass:
+    case 'grass':
       return GrassIcon
-    case PokemonType.ground:
+    case 'ground':
       return GroundIcon
-    case PokemonType.ice:
+    case 'ice':
       return IceIcon
-    case PokemonType.poison:
+    case 'poison':
       return PoisonIcon
-    case PokemonType.psychic:
+    case 'psychic':
       return PsychicIcon
-    case PokemonType.rock:
+    case 'rock':
       return RockIcon
-    case PokemonType.steel:
+    case 'steel':
       return SteelIcon
-    case PokemonType.water:
+    case 'water':
       return WaterIcon
-    case PokemonType.normal:
+    case 'normal':
     default:
       return NormalIcon
   }

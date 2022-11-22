@@ -12,16 +12,16 @@ import {
   Skeleton,
   ThemeProvider,
 } from '@mui/material'
-import PokeAPI, { IChainLink, INamedApiResource, IPokemon } from 'pokeapi-typescript'
+import PokeAPI, { IChainLink } from 'pokeapi-typescript'
 import PokemonModal from 'src/features/pokemons/components/PokemonModal'
-import { PokemonStat, PokemonType } from 'src/features/pokemons/contexts/PokemonProvider'
+import { Pokemon, PokemonStat, PokemonType } from 'src/features/pokemons/types/pokemon'
+import populateEvolution from 'src/features/pokemons/utils/populateEvolution'
+import useOnScreen from 'src/hooks/useOnScreen'
 import { baseTheme, getTheme } from 'src/theme'
 import { getIdFromUrl } from 'src/utils'
 
-import populateEvolution from '../utils/populateEvolution'
-
 interface PokemonCardProps {
-  pokemon: INamedApiResource<IPokemon>
+  pokemon: Pokemon
   isFavourite: boolean
   onAddFavourite: () => void
   onRemoveFavourite: () => void
@@ -37,7 +37,6 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
 }) => {
   const [loading, setLoading] = useState(true)
   const [theme, setTheme] = useState(baseTheme)
-  const [isVisible, setIsVisible] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const [types, setTypes] = useState<PokemonType[]>([])
@@ -57,20 +56,11 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
   const ref = useRef<HTMLDivElement>(null)
 
   const name = pokemon.name[0].toUpperCase() + pokemon.name.slice(1)
-  const id = getIdFromUrl(pokemon.url)
+  const { id } = pokemon
   const number = `#${`000${id}`.slice(-3)}`
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
 
-  useEffect(() => {
-    if (!ref.current) {
-      return
-    }
-
-    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting))
-
-    observer.observe(ref.current)
-  }, [ref])
-
+  const isVisible = useOnScreen(ref)
   useEffect(() => {
     // only fetch data for pokemon in view
     if (!isVisible) {
@@ -169,7 +159,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
       })
       .finally(() => setLoading(false))
     // eslint-disable-next-line  react-hooks/exhaustive-deps
-  }, [isVisible, pokemon.url])
+  }, [isVisible, pokemon.id])
 
   function handleToggleFavourite() {
     if (isFavourite) {

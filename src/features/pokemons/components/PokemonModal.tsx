@@ -9,7 +9,7 @@ import PokemonAbout from 'src/features/pokemons/components/PokemonAbout'
 import PokemonEvolution from 'src/features/pokemons/components/PokemonEvolution'
 import PokemonMoves from 'src/features/pokemons/components/PokemonMoves'
 import PokemonStats from 'src/features/pokemons/components/PokemonStats'
-import { PokemonType } from 'src/features/pokemons/contexts/PokemonProvider'
+import { PokemonType } from 'src/features/pokemons/types/pokemon'
 import organizeByLevel from 'src/features/pokemons/utils/moves'
 
 interface PokemonModalProps {

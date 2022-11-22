@@ -1,7 +1,6 @@
 import { IPokemonSpecies } from 'pokeapi-typescript/dist/interfaces/Pokemon/PokemonSpecies'
 import { INamedApiResource } from 'pokeapi-typescript/dist/interfaces/Utility/NamedApiResourceList'
-
-import { isOG } from '../../../utils'
+import { isOG } from 'src/utils'
 
 export interface ChainLink {
   evolves_to: ChainLink[]

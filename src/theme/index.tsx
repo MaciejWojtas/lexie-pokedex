@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material'
-import { PokemonType } from 'src/features/pokemons/contexts/PokemonProvider'
+import { PokemonType } from 'src/features/pokemons/types/pokemon'
 
 declare module '@mui/material/Paper' {
   interface PaperPropsVariantOverrides {
@@ -324,36 +324,36 @@ export const greyTheme = createTheme(baseTheme, {
 
 export function getTheme(type: PokemonType) {
   switch (type) {
-    case PokemonType.bug:
-    case PokemonType.flying:
-    case PokemonType.grass:
+    case 'bug':
+    case 'flying':
+    case 'grass':
       return greenTheme
 
-    case PokemonType.electric:
-    case PokemonType.fighting:
+    case 'electric':
+    case 'fighting':
       return yellowTheme
 
-    case PokemonType.fire:
-    case PokemonType.dragon:
+    case 'fire':
+    case 'dragon':
       return redTheme
 
-    case PokemonType.ice:
-    case PokemonType.normal:
-    case PokemonType.steel:
-    case PokemonType.water:
+    case 'ice':
+    case 'normal':
+    case 'steel':
+    case 'water':
       return blueTheme
 
-    case PokemonType.poison:
-    case PokemonType.dark:
-    case PokemonType.ghost:
+    case 'poison':
+    case 'dark':
+    case 'ghost':
       return purpleTheme
 
-    case PokemonType.psychic:
-    case PokemonType.fairy:
+    case 'psychic':
+    case 'fairy':
       return pinkTheme
 
-    case PokemonType.ground:
-    case PokemonType.rock:
+    case 'ground':
+    case 'rock':
     default:
       return brownTheme
   }
