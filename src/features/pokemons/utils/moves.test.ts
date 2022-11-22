@@ -1,4 +1,4 @@
-import organizeByLevel, { PokemonMove } from './moves'
+import organizeByLevel, { PokemonMove } from 'src/features/pokemons/utils/moves'
 
 const mockPokemonMoves: PokemonMove[] = [
   { level: 1, name: 'name1' },

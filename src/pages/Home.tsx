@@ -12,31 +12,28 @@ import {
   Typography,
 } from '@mui/material'
 import PokemonCard from 'src/features/pokemons/components/PokemonCard'
-import { Field, usePokemonContext } from 'src/features/pokemons/contexts/PokemonProvider'
+import MultipleSelect from 'src/features/pokemons/components/PokemonTypeFilter'
+import usePokemonFilters from 'src/features/pokemons/hooks/usePokemonFilters'
+import usePokemonList from 'src/features/pokemons/hooks/usePokemonList'
 
 const Home: React.FC = () => {
+  const pokemon = usePokemonList()
+
   const {
-    pokemon,
-    query,
-    search,
-    favourites,
+    favouriteFilter,
     addFavourite,
     removeFavourite,
-    filters,
-    addFilter,
-    removeFilter,
-  } = usePokemonContext()
+    toggleFavouriteFilter,
+    queryFilter,
+    setQueryFilter,
+    typeFilter,
+    setTypeFilter,
+    filteredData,
+    favourites,
+  } = usePokemonFilters(pokemon)
 
   function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
-    search(event.target.value)
-  }
-
-  const handleToggleFavourites = () => {
-    if (filters[Field.favourite]) {
-      removeFilter(Field.favourite)
-    } else {
-      addFilter(Field.favourite, true)
-    }
+    setQueryFilter(event.target.value)
   }
 
   return (
@@ -63,7 +60,7 @@ const Home: React.FC = () => {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => search('')}>
+                <IconButton onClick={() => setQueryFilter('')}>
                   <Close />
                 </IconButton>
               </InputAdornment>
@@ -71,14 +68,14 @@ const Home: React.FC = () => {
           }}
           onChange={handleQueryChange}
           placeholder="Search Pokemon"
-          value={query}
+          value={queryFilter}
           variant="outlined"
         />
 
         <Button
-          color={filters[Field.favourite] ? 'primary' : 'secondary'}
-          onClick={handleToggleFavourites}
-          startIcon={filters[Field.favourite] ? <Favorite /> : <FavoriteBorder />}
+          color={favouriteFilter ? 'primary' : 'secondary'}
+          onClick={toggleFavouriteFilter}
+          startIcon={favouriteFilter ? <Favorite /> : <FavoriteBorder />}
           sx={{
             flexShrink: 0,
             ml: '2rem',
@@ -86,10 +83,11 @@ const Home: React.FC = () => {
         >
           My Favourites ({favourites.length})
         </Button>
+        <MultipleSelect pokemonType={typeFilter} setPokemonType={setTypeFilter} />
       </Box>
 
       <Grid container spacing={2}>
-        {pokemon.map((pokemon) => (
+        {filteredData?.map((pokemon) => (
           <Grid item key={pokemon.name} md={4} sm={6} xs={12}>
             <PokemonCard
               isFavourite={favourites.includes(pokemon.name)}

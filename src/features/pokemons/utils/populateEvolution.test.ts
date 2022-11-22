@@ -1,4 +1,4 @@
-import populateEvolution, { ChainLink } from './populateEvolution'
+import populateEvolution, { ChainLink } from 'src/features/pokemons/utils/populateEvolution'
 
 const link: ChainLink = {
   evolves_to: [
