@@ -1,29 +1,42 @@
-import { Box, Card, CardActionArea, CardHeader, CardContent, CardMedia, Skeleton, Fade, Dialog, ThemeProvider } from "@mui/material"
-import { PokemonStat, PokemonType } from "./Contexts/PokemonProvider"
-import { useEffect, useRef, useState } from "react"
-import PokemonModal from "./PokemonModal";
-import { baseTheme, getTheme } from "../theme";
-import PokeAPI, { IChainLink, INamedApiResource, IPokemon } from "pokeapi-typescript";
-import { getIdFromUrl, isOG } from "../utils";
+import { useEffect, useRef, useState } from 'react'
+
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Dialog,
+  Fade,
+  Skeleton,
+  ThemeProvider,
+} from '@mui/material'
+import PokeAPI, { IChainLink } from 'pokeapi-typescript'
+import PokemonModal from 'src/features/pokemons/components/PokemonModal'
+import { Pokemon, PokemonStat, PokemonType } from 'src/features/pokemons/types/pokemon'
+import populateEvolution from 'src/features/pokemons/utils/populateEvolution'
+import useOnScreen from 'src/hooks/useOnScreen'
+import { baseTheme, getTheme } from 'src/theme'
+import { getIdFromUrl } from 'src/utils'
 
 interface PokemonCardProps {
-  pokemon: INamedApiResource<IPokemon>
+  pokemon: Pokemon
   isFavourite: boolean
   onAddFavourite: () => void
   onRemoveFavourite: () => void
 }
 
-const DURATION = 1000;
+const DURATION = 1000
 
 const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemon,
   isFavourite,
   onAddFavourite,
-  onRemoveFavourite
+  onRemoveFavourite,
 }) => {
   const [loading, setLoading] = useState(true)
   const [theme, setTheme] = useState(baseTheme)
-  const [isVisible, setIsVisible] = useState(false)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const [types, setTypes] = useState<PokemonType[]>([])
@@ -43,22 +56,11 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
   const ref = useRef<HTMLDivElement>(null)
 
   const name = pokemon.name[0].toUpperCase() + pokemon.name.slice(1)
-  const id = getIdFromUrl(pokemon.url)
-  const number = `#${('000' + id).slice(-3)}`
+  const { id } = pokemon
+  const number = `#${`000${id}`.slice(-3)}`
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`
 
-  useEffect(() => {
-    if (!ref.current) {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting)
-    )
-
-    observer.observe(ref.current)
-  }, [ref.current])
-
+  const isVisible = useOnScreen(ref)
   useEffect(() => {
     // only fetch data for pokemon in view
     if (!isVisible) {
@@ -78,7 +80,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
         setWeight(pokemon.weight)
         setAbilities(abilities)
 
-        for (const stat of pokemon.stats) {
+        pokemon.stats.forEach((stat) => {
           switch (stat.stat.name) {
             case PokemonStat.hp:
               setHp(stat.base_stat)
@@ -103,29 +105,35 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
             case PokemonStat.speed:
               setSpeed(stat.base_stat)
               break
+            default:
+              break
           }
-        }
+        })
 
         const moves = pokemon.moves
-          .filter((resource) => {
-            return resource.version_group_details.some((version) => version.version_group.name === 'emerald')
-          })
+          .filter((resource) =>
+            resource.version_group_details.some(
+              (version) => version.version_group.name === 'emerald'
+            )
+          )
           .map((resource) => {
-            const version = resource.version_group_details.find((version) => version.version_group.name === 'emerald')
+            const version = resource.version_group_details.find(
+              (version) => version.version_group.name === 'emerald'
+            )
 
             return {
               name: resource.move.name.replace('-', ' '),
-              level: version!.level_learned_at
+              level: version!.level_learned_at,
             }
           })
           .sort((a, b) => {
             if (a.level === b.level) {
               return 0
-            } else if (a.level > b.level) {
-              return 1
-            } else {
-              return -1
             }
+            if (a.level > b.level) {
+              return 1
+            }
+            return -1
           })
 
         setMoves(moves)
@@ -133,7 +141,9 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
         return PokeAPI.PokemonSpecies.resolve(pokemon.species.name)
       })
       .then((species) => {
-        const description = species.flavor_text_entries.find((flavor) => flavor.language.name === 'en' && flavor.version.name === 'emerald')
+        const description = species.flavor_text_entries.find(
+          (flavor) => flavor.language.name === 'en' && flavor.version.name === 'emerald'
+        )
         setDescription(description?.flavor_text)
 
         const id = getIdFromUrl(species.evolution_chain.url)
@@ -142,33 +152,14 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
       })
       .then((evolutions) => {
         const chain: IChainLink[] = []
-        let link: IChainLink | undefined = evolutions.chain
-        recurse(link)
-
-        function recurse(link: IChainLink) {
-          // only respect the OG pokemon
-          if (!link.evolves_to.length) {
-            return
-          }
-
-          link.evolves_to = link.evolves_to.filter((link) => isOG(link.species.url))
-
-          // in some cases, non-OG pokemon evolve into OG pokemon (like Pichu)
-          // don't include non-OG pokemon in our chain, but still process
-          // their evolutions
-          if (isOG(link.species.url)) {
-            chain.push(link)
-          }
-
-          for (const child of link.evolves_to) {
-            recurse(child)
-          }
-        }
+        const link: IChainLink | undefined = evolutions.chain
+        populateEvolution(link, chain)
 
         setEvolutions(chain)
       })
       .finally(() => setLoading(false))
-  }, [isVisible, pokemon.url])
+    // eslint-disable-next-line  react-hooks/exhaustive-deps
+  }, [isVisible, pokemon.id])
 
   function handleToggleFavourite() {
     if (isFavourite) {
@@ -191,22 +182,22 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
       <Card ref={ref}>
         <Fade in={loading} timeout={{ enter: 0, exit: DURATION }}>
           <Skeleton
-            variant="rectangular"
             animation="wave"
             height="100%"
-            width="100%"
             sx={{ position: 'absolute', backgroundColor: '#dde4e4' }}
+            variant="rectangular"
+            width="100%"
           />
         </Fade>
 
         <CardActionArea onClick={handleCardClick}>
-          <CardHeader title={name} subheader={number}/>
+          <CardHeader subheader={number} title={name} />
 
           <CardContent>
             <Box
               sx={{
                 display: 'flex',
-                justifyContent: 'flex-end'
+                justifyContent: 'flex-end',
               }}
             >
               <Box
@@ -215,15 +206,11 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
                   backgroundSize: 'contain',
                   backgroundRepeat: 'no-repeat',
                   height: '15rem',
-                  width: '75%'
+                  width: '75%',
                 }}
               >
                 <Fade in={!loading} timeout={DURATION}>
-                  <CardMedia
-                    component="img"
-                    height="250"
-                    image={imageUrl}
-                  />
+                  <CardMedia component="img" height="250" image={imageUrl} />
                 </Fade>
               </Box>
             </Box>
@@ -232,36 +219,36 @@ const PokemonCard: React.FC<PokemonCardProps> = ({
       </Card>
 
       <Dialog
-        open={isDialogOpen}
-        fullWidth={true}
+        fullWidth
         maxWidth="sm"
-        scroll="body"
         onBackdropClick={handleCloseDialog}
         onClose={handleCloseDialog}
+        open={isDialogOpen}
+        scroll="body"
       >
         {loading ? (
-          <div></div>
+          <div />
         ) : (
           <PokemonModal
-            name={name}
-            types={types}
-            imageUrl={imageUrl}
-            experience={experience!}
-            height={height!}
-            weight={weight!}
-            moves={moves!}
             abilities={abilities!}
-            hp={hp!}
             attack={attack!}
             defense={defense!}
+            description={description!}
+            evolutions={evolutions!}
+            experience={experience!}
+            height={height!}
+            hp={hp!}
+            imageUrl={imageUrl}
+            isFavourite={isFavourite}
+            moves={moves!}
+            name={name}
+            onClose={handleCloseDialog}
+            onToggleFavourite={handleToggleFavourite}
             specialAttack={specialAttack!}
             specialDefense={specialDefense!}
             speed={speed!}
-            description={description!}
-            evolutions={evolutions!}
-            isFavourite={isFavourite}
-            onToggleFavourite={handleToggleFavourite}
-            onClose={handleCloseDialog}
+            types={types}
+            weight={weight!}
           />
         )}
       </Dialog>

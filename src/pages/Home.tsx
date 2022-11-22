@@ -1,89 +1,99 @@
 import React, { ChangeEvent } from 'react'
-import { Container, Grid, InputAdornment, TextField, Typography, Box, Button, IconButton } from '@mui/material'
-import PokemonCard from '../components/PokemonCard'
-import { Field, usePokemonContext } from '../components/Contexts/PokemonProvider'
-import { Search, FavoriteBorder, Favorite, Close } from '@mui/icons-material'
+
+import { Close, Favorite, FavoriteBorder, Search } from '@mui/icons-material'
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material'
+import PokemonCard from 'src/features/pokemons/components/PokemonCard'
+import MultipleSelect from 'src/features/pokemons/components/PokemonTypeFilter'
+import usePokemonFilters from 'src/features/pokemons/hooks/usePokemonFilters'
+import usePokemonList from 'src/features/pokemons/hooks/usePokemonList'
 
 const Home: React.FC = () => {
+  const pokemon = usePokemonList()
+
   const {
-    pokemon,
-    query,
-    search,
-    favourites,
+    favouriteFilter,
     addFavourite,
     removeFavourite,
-    filters,
-    addFilter,
-    removeFilter,
-  } = usePokemonContext()
+    toggleFavouriteFilter,
+    queryFilter,
+    setQueryFilter,
+    typeFilter,
+    setTypeFilter,
+    filteredData,
+    favourites,
+  } = usePokemonFilters(pokemon)
 
   function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
-    search(event.target.value)
-  }
-
-  const handleToggleFavourites = () => {
-    if (filters[Field.favourite]) {
-      removeFilter(Field.favourite)
-    } else {
-      addFilter(Field.favourite, true)
-    }
+    setQueryFilter(event.target.value)
   }
 
   return (
     <Container maxWidth="lg" sx={{ py: 2 }}>
-      <Typography variant="h1">What Pokemon <br/>are you looking for?</Typography>
+      <Typography variant="h1">
+        What Pokemon <br />
+        are you looking for?
+      </Typography>
       <Box
         sx={{
           display: 'flex',
           pt: 4,
-          pb: 2
+          pb: 2,
         }}
       >
         <TextField
           id="pokemon-search"
-          placeholder="Search Pokemon"
-          variant="outlined"
-          value={query}
-          onChange={handleQueryChange}
           InputProps={{
             sx: { pr: 0 },
-            startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
-            endAdornment: <InputAdornment position="end">
-              <IconButton onClick={() => search('')}><Close /></IconButton>
-            </InputAdornment>
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setQueryFilter('')}>
+                  <Close />
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
+          onChange={handleQueryChange}
+          placeholder="Search Pokemon"
+          value={queryFilter}
+          variant="outlined"
         />
 
         <Button
-          startIcon={filters[Field.favourite]
-            ? <Favorite />
-            : <FavoriteBorder />
-          }
-          color={filters[Field.favourite] ? 'primary' : 'secondary'}
+          color={favouriteFilter ? 'primary' : 'secondary'}
+          onClick={toggleFavouriteFilter}
+          startIcon={favouriteFilter ? <Favorite /> : <FavoriteBorder />}
           sx={{
             flexShrink: 0,
-            ml: '2rem'
+            ml: '2rem',
           }}
-          onClick={handleToggleFavourites}
         >
           My Favourites ({favourites.length})
         </Button>
+        <MultipleSelect pokemonType={typeFilter} setPokemonType={setTypeFilter} />
       </Box>
 
       <Grid container spacing={2}>
-        {pokemon.map((pokemon) => (
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            key={pokemon.name}
-          >
+        {filteredData?.map((pokemon) => (
+          <Grid item key={pokemon.name} md={4} sm={6} xs={12}>
             <PokemonCard
-              pokemon={pokemon}
               isFavourite={favourites.includes(pokemon.name)}
               onAddFavourite={() => addFavourite(pokemon)}
               onRemoveFavourite={() => removeFavourite(pokemon)}
+              pokemon={pokemon}
             />
           </Grid>
         ))}

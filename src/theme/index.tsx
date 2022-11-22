@@ -1,5 +1,5 @@
-import { createTheme } from "@mui/material";
-import { PokemonType } from "../components/Contexts/PokemonProvider";
+import { createTheme } from '@mui/material'
+import { PokemonType } from 'src/features/pokemons/types/pokemon'
 
 declare module '@mui/material/Paper' {
   interface PaperPropsVariantOverrides {
@@ -25,6 +25,10 @@ const brownDark = '#bc8939'
 const greyLight = '#dde4e4'
 const greyDark = '#bcc4c4'
 
+function createGradient(light: string, dark: string) {
+  return `linear-gradient(to right bottom, ${light}, ${dark} 120%)`
+}
+
 const greenGradient = createGradient(greenLight, greenDark)
 const yellowGradient = createGradient(yellowLight, yellowDark)
 const redGradient = createGradient(redLight, redDark)
@@ -34,33 +38,29 @@ const pinkGradient = createGradient(pinkLight, pinkDark)
 const brownGradient = createGradient(brownLight, brownDark)
 const greyGradient = createGradient(greyLight, greyDark)
 
-function createGradient(light: string, dark: string) {
-  return `linear-gradient(to right bottom, ${light}, ${dark} 120%)`
-}
-
 export const baseTheme = createTheme({
   palette: {
     secondary: {
-      main: '#F5F5F5'
-    }
+      main: '#F5F5F5',
+    },
   },
   typography: {
     fontFamily: '"Nunito", sans-serif',
     h1: {
       fontSize: '2rem',
       color: '#1F242D',
-      fontWeight: 700
+      fontWeight: 700,
     },
     body1: {
       color: '#43484E',
-      fontWeight: 700
+      fontWeight: 700,
     },
     caption: {
-      fontSize: '1rem'
+      fontSize: '1rem',
     },
     button: {
-      fontWeight: 700
-    }
+      fontWeight: 700,
+    },
   },
   components: {
     MuiCardHeader: {
@@ -70,47 +70,47 @@ export const baseTheme = createTheme({
           textTransform: 'capitalize',
         },
         title: {
-          fontWeight: 700
+          fontWeight: 700,
         },
         subheader: {
-          opacity: .7,
+          opacity: 0.7,
           fontSize: '1.4rem',
-          fontWeight: 700
-        }
-      }
+          fontWeight: 700,
+        },
+      },
     },
     MuiCardContent: {
       styleOverrides: {
         root: {
-          paddingTop: 0
-        }
-      }
+          paddingTop: 0,
+        },
+      },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
           boxShadow: '0px 20px 25px rgba(0, 0, 0, 0.1), 0px 10px 10px rgba(0, 0, 0, 0.04)',
           position: 'relative',
-          color: '#fff'
+          color: '#fff',
         },
       },
       variants: [
         {
-          props: {variant: 'white' },
+          props: { variant: 'white' },
           style: {
             background: '#fff',
-            color: 'grey'
-          }
+            color: 'grey',
+          },
         },
-      ]
+      ],
     },
     MuiDialog: {
       styleOverrides: {
         paper: {
           borderRadius: '30px',
-          color: '#fff'
-        }
-      }
+          color: '#fff',
+        },
+      },
     },
     MuiDialogTitle: {
       styleOverrides: {
@@ -119,9 +119,9 @@ export const baseTheme = createTheme({
           paddingBottom: 0,
           paddingTop: 0,
           fontWeight: 700,
-          textTransform: 'capitalize'
-        }
-      }
+          textTransform: 'capitalize',
+        },
+      },
     },
     MuiChip: {
       styleOverrides: {
@@ -130,15 +130,15 @@ export const baseTheme = createTheme({
           color: '#fff',
           textTransform: 'capitalize',
           height: '28px',
-          padding: '0 0.5rem'
-        }
-      }
+          padding: '0 0.5rem',
+        },
+      },
     },
     MuiTextField: {
       defaultProps: {
         variant: 'outlined',
         size: 'small',
-        fullWidth: true
+        fullWidth: true,
       },
     },
     MuiOutlinedInput: {
@@ -150,12 +150,12 @@ export const baseTheme = createTheme({
         notchedOutline: {
           borderColor: 'transparent',
         },
-      }
+      },
     },
     MuiButton: {
       defaultProps: {
         variant: 'contained',
-        disableElevation: true
+        disableElevation: true,
       },
       styleOverrides: {
         root: {
@@ -163,14 +163,14 @@ export const baseTheme = createTheme({
           borderWidth: '1px',
           borderColor: 'transparent',
           borderStyle: 'solid',
-          transitionDeration: 'unset'
+          transitionDeration: 'unset',
         },
         containedSecondary: {
           '&:hover': {
             backgroundColor: '#F5F5F5',
-            borderColor: 'rgba(0, 0, 0, 0.87)'
-          }
-        }
+            borderColor: 'rgba(0, 0, 0, 0.87)',
+          },
+        },
       },
     },
     MuiIconButton: {
@@ -178,182 +178,183 @@ export const baseTheme = createTheme({
         colorSecondary: {
           color: '#c5c5c5',
           '&:hover': {
-            backgroundColor: '#f5f5f5'
-          }
-        }
-      }
+            backgroundColor: '#f5f5f5',
+          },
+        },
+      },
     },
-  }
+  },
 })
 
 export const greenTheme = createTheme(baseTheme, {
   palette: {
     primary: {
-      main: greenDark
-    }
+      main: greenDark,
+    },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
           background: greenGradient,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export const yellowTheme = createTheme(baseTheme, {
   palette: {
     primary: {
-      main: yellowDark
-    }
+      main: yellowDark,
+    },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
           background: yellowGradient,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export const redTheme = createTheme(baseTheme, {
   palette: {
     primary: {
-      main: redDark
-    }
+      main: redDark,
+    },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
           background: redGradient,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export const blueTheme = createTheme(baseTheme, {
   palette: {
     primary: {
-      main: blueDark
-    }
+      main: blueDark,
+    },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
           background: blueGradient,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export const purpleTheme = createTheme(baseTheme, {
   palette: {
     primary: {
-      main: purpleDark
-    }
+      main: purpleDark,
+    },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
           background: purpleGradient,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export const pinkTheme = createTheme(baseTheme, {
   palette: {
     primary: {
-      main: pinkDark
-    }
+      main: pinkDark,
+    },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
           background: pinkGradient,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export const brownTheme = createTheme(baseTheme, {
   palette: {
     primary: {
-      main: brownDark
-    }
+      main: brownDark,
+    },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
           background: brownGradient,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export const greyTheme = createTheme(baseTheme, {
   palette: {
     primary: {
-      main: greyLight
-    }
+      main: greyLight,
+    },
   },
   components: {
     MuiPaper: {
       styleOverrides: {
         root: {
           background: greyGradient,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export function getTheme(type: PokemonType) {
   switch (type) {
-    case PokemonType.bug:
-    case PokemonType.flying:
-    case PokemonType.grass:
+    case 'bug':
+    case 'flying':
+    case 'grass':
       return greenTheme
 
-    case PokemonType.electric:
-    case PokemonType.fighting:
+    case 'electric':
+    case 'fighting':
       return yellowTheme
 
-    case PokemonType.fire:
-    case PokemonType.dragon:
+    case 'fire':
+    case 'dragon':
       return redTheme
 
-    case PokemonType.ice:
-    case PokemonType.normal:
-    case PokemonType.steel:
-    case PokemonType.water:
+    case 'ice':
+    case 'normal':
+    case 'steel':
+    case 'water':
       return blueTheme
 
-    case PokemonType.poison:
-    case PokemonType.dark:
-    case PokemonType.ghost:
+    case 'poison':
+    case 'dark':
+    case 'ghost':
       return purpleTheme
 
-    case PokemonType.psychic:
-    case PokemonType.fairy:
+    case 'psychic':
+    case 'fairy':
       return pinkTheme
 
-    case PokemonType.ground:
-    case PokemonType.rock:
+    case 'ground':
+    case 'rock':
+    default:
       return brownTheme
   }
 }
