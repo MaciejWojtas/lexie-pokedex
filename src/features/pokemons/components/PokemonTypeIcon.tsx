@@ -19,7 +19,6 @@ import { ReactComponent as PsychicIcon } from 'src/assets/icons/psychic.svg'
 import { ReactComponent as RockIcon } from 'src/assets/icons/rock.svg'
 import { ReactComponent as SteelIcon } from 'src/assets/icons/steel.svg'
 import { ReactComponent as WaterIcon } from 'src/assets/icons/water.svg'
-
 import { PokemonType } from 'src/features/pokemons/types/pokemon'
 
 interface PokemonTypeIconProps extends SvgIconProps {

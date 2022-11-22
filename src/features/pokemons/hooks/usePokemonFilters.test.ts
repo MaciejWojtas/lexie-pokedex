@@ -1,10 +1,9 @@
 import { act, renderHook } from '@testing-library/react-hooks'
 import PokeAPI, { IPokemon } from 'pokeapi-typescript'
 import { NamedEndpointParam } from 'pokeapi-typescript/dist/classes/NamedEndpoint'
-
-import { mockPokemonList } from 'src/features/pokemons/testing/mockPokemon'
-import { transformData } from 'src/features/pokemons/hooks/usePokemonList'
 import usePokemonFilters from 'src/features/pokemons/hooks/usePokemonFilters'
+import { transformData } from 'src/features/pokemons/hooks/usePokemonList'
+import { mockPokemonList } from 'src/features/pokemons/testing/mockPokemon'
 
 const mockPokeAPIFetch = (param: NamedEndpointParam) =>
   new Promise((resolve) => {
